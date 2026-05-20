@@ -34,3 +34,8 @@ def create_todo(todo: TodoCreate, db: Session = Depends(get_db)):
             "title": new_todo.title
         }
     }
+
+@app.get("/todos")
+def get_todos(db: Session = Depends(get_db)):
+    todos = db.query(Todo).all()
+    return todos
