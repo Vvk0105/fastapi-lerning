@@ -51,3 +51,19 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Todo Deleted"}
+
+@app.put("/todo/{todo_id}")
+def update_todo(todo_id: int, update_todo: TodoCreate, db: Session = Depends(get_db)):
+    todo = db.query(Todo).filter(Todo.id == todo_id).first()
+
+    if not todo:
+        return {"message": "Todo not found"}
+    
+    todo.title = update_todo.title
+    db.commit()
+    db.refresh(todo)
+
+    return {
+        "message": "Todo updated",
+        "data": todo
+    }
