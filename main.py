@@ -39,3 +39,15 @@ def create_todo(todo: TodoCreate, db: Session = Depends(get_db)):
 def get_todos(db: Session = Depends(get_db)):
     todos = db.query(Todo).all()
     return todos
+
+@app.delete("/todo/{todo_id}")
+def delete_todo(todo_id: int, db: Session = Depends(get_db)):
+    todo = db.query(Todo).filter(Todo.id == todo_id).first()
+
+    if not todo:
+        return {"message": "Todo not found"}
+    
+    db.delete(todo)
+    db.commit()
+
+    return {"message": "Todo Deleted"}
