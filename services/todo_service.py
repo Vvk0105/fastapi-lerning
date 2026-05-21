@@ -24,3 +24,16 @@ def delete_existing_todo(db, todo_id):
     db.commit()
 
     return todo
+
+def complete_todo(db, todo_id):
+    todo = db.query(Todo).filter(Todo.id == todo_id).first()
+
+    if not todo:
+        return None
+    
+    todo.completed = True
+
+    db.commit()
+    db.refresh(todo)
+
+    return todo
