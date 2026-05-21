@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from database import SessionLocal
-from schemas.todo_schema import TodoCreate
+from schemas.todo_schema import TodoCreate, TodoResponse
 from services.todo_service import (
     get_all_todos,
     create_new_todo,
@@ -20,7 +20,7 @@ def get_db():
         db.close()
 
 
-@router.get("/todos")
+@router.get("/todos", response_model=list[TodoResponse])
 def get_todos(db: Session = Depends(get_db)):
     return get_all_todos(db)
 
