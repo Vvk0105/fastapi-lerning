@@ -40,7 +40,7 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
 
     return {"message": "Todo deleted"}
 
-@router.patch("/todos/{todo_id}/complete")
+@router.patch("/todos/{todo_id}/complete", response_model=TodoResponse)
 def mark_completed(todo_id: int, db: Session = Depends(get_db)):
     todo = complete_todo(db, todo_id)
 
