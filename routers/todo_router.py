@@ -9,6 +9,7 @@ from services.todo_service import (
     delete_existing_todo,
     complete_todo
 )
+from dependencies import get_current_user
 
 router = APIRouter()
 
@@ -22,17 +23,17 @@ def get_db():
 
 
 @router.get("/todos", response_model=list[TodoResponse])
-def get_todos(db: Session = Depends(get_db)):
+def get_todos(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     return get_all_todos(db)
 
 
 @router.post("/todos")
-def create_todo(todo: TodoCreate, db: Session = Depends(get_db)):
+def create_todo(todo: TodoCreate, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     return create_new_todo(db, todo.title)
 
 
 @router.delete("/todos/{todo_id}")
-def delete_todo(todo_id: int, db: Session = Depends(get_db)):
+def delete_todo(todo_id: int, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     deleted = delete_existing_todo(db, todo_id)
 
     if not deleted:
