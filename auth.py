@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from jose import jwt
+from jose import JWTError
 from passlib.context import CryptContext
 
 SECURITY_KEY = "myseckey"
@@ -34,3 +35,21 @@ def create_access_token(data: dict):
     )
 
     return encode_jwt
+
+def verify_token(token: str):
+    try:
+        payload = jwt.decode(
+            token,
+            SECURITY_KEY,
+            algorithms=[ALGORITHM]
+        )
+    
+        email = payload.get("sub")
+
+        if email is None:
+            return None
+        
+        return email
+
+    except JWTError:
+        return None
