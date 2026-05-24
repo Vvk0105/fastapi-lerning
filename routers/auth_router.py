@@ -8,6 +8,7 @@ from auth import (
     verify_password,
     create_access_token
 )
+from fastapi import HTTPException
 
 router = APIRouter()
 
@@ -28,8 +29,10 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
         .first()
     )
     
+    # if existing_user:
+    #     return {"message": "email already exists"}
     if existing_user:
-        return {"message": "email already exists"}
+        raise HTTPException(status_code=400, detail="Email already exists")
     
     hashed_password = hash_password(user.password)
 
